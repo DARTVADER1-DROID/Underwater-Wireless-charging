@@ -1,6 +1,6 @@
-# Formula Provenance — Human-Readable Reference
+# Formula Provenance
 
-This file explains where each formula comes from, what its symbols mean and how it is used. Equations are written in plain text with words and units so that readers do not need to interpret raw LaTeX.
+This file records each formula's source, symbol definitions, units and conditions of use.
 
 ## 1. Wheeler flat-spiral self-inductance approximation
 
@@ -121,4 +121,4 @@ Rearranged for capacitance:
 
 **C = 1 / [(2π × f0)² × L]**.
 
-This formula must not be used to select capacitors until operating frequency, measured in-environment inductance and compensation topology are selected. Research-paper equations are summarized separately in [Chen et al. paper equations](chen-2024-paper-equations.md).
+This formula must not be used to select capacitors until operating frequency, measured in-environment inductance and compensation topology are selected. Research-paper equations are summarized separately in [Chen et al. paper equations](equations/chen-2024-paper-equations.md).
