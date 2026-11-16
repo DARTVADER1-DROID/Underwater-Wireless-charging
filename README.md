@@ -40,6 +40,17 @@ These values are explicitly conditional on the geometry and assumptions document
 
 Operating frequency, compensation topology, actual conductor suitability at frequency, waterproofing/encapsulation, ferrite or shielding, receiver rectifier, and thermal limits are not yet finalized.
 
+## Reproduce the calculation
+
+The numerical model uses SciPy for complete elliptic integrals and numerical quadrature:
+
+```bash
+python -m pip install scipy
+python tools/coil_model.py
+```
+
+The script prints the turn geometry, Wheeler self-inductance estimate, 7 × 7 Maxwell mutual-inductance matrix, a direct Neumann-integral cross-check, and the derived coupling coefficient. It includes numerical and physical consistency assertions.
+
 ## Engineering status
 
 **Status: analytical baseline documented; not hardware-validated.**
