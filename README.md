@@ -1,6 +1,6 @@
 # Underwater Wireless Charging (UWLPT)
 
-Engineering documentation for a 12 V DC, 24 W underwater wireless power-transfer prototype.
+Engineering documentation for a 12 V lead-acid-battery-fed, 30 kHz-class underwater wireless power-transfer prototype. The 24 W rating is being clarified as input power versus delivered load power.
 
 ## Current analytical coil baseline
 
@@ -14,50 +14,37 @@ Engineering documentation for a 12 V DC, 24 W underwater wireless power-transfer
 | TX self-inductance | 2.29631793 µH | Wheeler estimate |
 | RX self-inductance | 2.29631793 µH | Wheeler estimate |
 | Mutual inductance | 0.3276527625 µH | 49-pair Maxwell filament calculation |
-| Coupling coefficient | 0.1426861491 | Derived, dimensionless |
+| Coupling coefficient | 0.1426861491 | Preliminary derived estimate |
 
-**These are preliminary analytical values, not measured results.** The self-inductance uses Wheeler's approximate flat-spiral equation. Mutual inductance uses ideal circular filament turns in free space. Their ratio is therefore a preliminary mixed-model estimate of coupling.
+These are preliminary analytical values, not measured results.
 
-## Documentation
+## Engineering documentation
 
-- [System architecture and engineering documentation index](docs/README.md)
-- [12 V full H-bridge inverter design](docs/power-stage/h-bridge-inverter.md)
-- [NE555 30 kHz oscillator and gate-control interface](docs/control/ne555-oscillator.md)
+- [Documentation index](docs/README.md)
+- [System architecture](docs/architecture/system-architecture.md)
+- [Full H-bridge inverter](docs/power-stage/h-bridge-inverter.md)
+- [NE555 oscillator and gate-control interface](docs/control/ne555-oscillator.md)
 - [Text-based engineering diagrams](docs/diagrams/README.md)
-
-- [Readable coil geometry, inductance and coupling calculations](docs/design/coil-design-and-coupling.md)
+- [TX/RX coil calculations](docs/design/coil-design-and-coupling.md)
 - [Research-source index](docs/research/README.md)
-- [Readable formula provenance and derivations](docs/research/formulas/formula-provenance.md)
-- [Equations from the Chen et al. research paper](docs/research/formulas/chen-2024-paper-equations.md)
+- [Formula provenance](docs/research/formulas/formula-provenance.md)
+- [Chen et al. paper equations](docs/research/formulas/chen-2024-paper-equations.md)
 - [Research paper technical note](docs/research/papers/chen-2024-tile-shaped-underwater-wpt.md)
-- [Reproducible numerical model](tools/coil_model.py)
+- [Reproducible coil model](tools/coil_model.py)
 
-## Project requirements and unresolved decisions
+## Current system definition
 
-- DC input: 12 V
-- Target transferred power: 24 W
-- Transmitter: full H-bridge
-- TX current target: 2 A AC; RMS definition and measurement point still need clarification
-- Artificial saltwater target: approximately 35 g/kg; conductivity must be measured at test temperature
-- Coil separation study range: 20–40 mm; 30 mm is the fully documented reference calculation
+- Input: nominal 12 V lead-acid battery.
+- Inverter: four-switch full H-bridge, bipolar square-wave output.
+- Timing: NE555-based timing source; 30 kHz target at the bridge/coil must be distinguished from timer pin frequency.
+- TX/RX: resonant capacitor and previously calculated TX/RX coils.
+- Receiver: high-frequency bridge rectifier and resistive DC load.
+- Power: 12 V × 2 A = 24 W is the nominal input if those values refer to the battery side. A 24 W receiver load requires greater input power due to losses.
 
-Operating frequency, compensation topology, final conductor, waterproofing, ferrite/shielding, receiver rectifier and thermal limits are not finalized.
+## Reproduce coil calculations
 
-## Reproduce the numerical calculation
+`python -m pip install scipy` then `python tools/coil_model.py`.
 
-Install SciPy and run:
+## Status
 
-```bash
-python -m pip install scipy
-python tools/coil_model.py
-```
-
-The script prints geometry, Wheeler self-inductance, the 7 × 7 mutual-inductance matrix, a direct Neumann-integral numerical cross-check and the coupling coefficient.
-
-## Engineering status
-
-**Analytical baseline documented; not hardware-validated.** Do not select resonant capacitors or claim power-transfer efficiency from these inductance estimates alone. Validate the finite-conductor coil geometry using an electromagnetic field solver and then measure the fabricated coils.
-
-## Source policy
-
-Research-paper equations and reported values are kept separate from the project's own calculations. Never substitute the paper's coil parameters into this design without recalculation.
+Analytical coil baseline documented; not yet hardware-validated. Do not infer final resonant capacitors or end-to-end efficiency from the coil estimates alone.
