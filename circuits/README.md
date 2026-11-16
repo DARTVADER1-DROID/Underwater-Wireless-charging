@@ -1,32 +1,46 @@
 # LTspice circuits
 
-This directory contains native LTspice-compatible circuit files.
+This directory contains native LTspice-compatible schematics and SPICE testbenches.
 
-## Current model
+## Files
 
-- [Coupled resonant link testbench](uwlpt-resonant-link.cir)
+- [H-bridge power-stage schematic](h-bridge-power-stage.asc) — graphical four-MOSFET bridge using idealized gate-to-source pulse sources.
+- [Coupled resonant-link testbench](uwlpt-resonant-link.cir) — explicit SPICE netlist for the preliminary series-series compensated wireless link.
 
-The current files are **simulation starting points**, not complete charger schematics. The symbol-based [H-bridge power-stage schematic](h-bridge-power-stage.asc) uses four generic NMOS devices and ideal gate-to-source pulse sources so the switching topology and dead time can be inspected visually. It is not a hardware-ready driver design. It models the bridge output as an ideal bipolar source and models the transmitter and receiver coils as coupled inductors. It does not yet contain MOSFET gate drivers, dead-time logic, a physical rectifier, output filter, protection, or a validated battery/load interface.
+## H-bridge schematic assumptions
 
-Open the `.asc` schematic or `.cir` netlist in LTspice. The H-bridge schematic is a graphical electrical drawing; the resonant-link netlist remains an explicit SPICE model.
+- Q1/Q4 and Q2/Q3 are alternating diagonal switch pairs.
+- Idealized gate-to-source pulses use 10 V amplitude at a 30 kHz repetition rate.
+- The pulse timing provides 1 us of non-overlap dead time between diagonal pairs.
+- The generic `SWNMOS` model is a simulation placeholder, not a selected MOSFET or a validated loss model.
+- The 12 ohm resistor is a test load, not the final resonant transmitter load.
+- The ideal gate sources do not represent a real high-side/low-side gate-driver IC, bootstrap supply, undervoltage lockout, gate resistors, or protection circuit.
 
-## Model status
+## Resonant-link model baseline
 
 | Item | Value | Status |
 |---|---:|---|
 | Switching frequency | 30 kHz | Project target; exact control implementation pending |
 | Differential bridge waveform | -12 V to +12 V | Idealized full-bridge equivalent |
-| TX inductance | 2.29631793 µH | Preliminary Wheeler estimate |
-| RX inductance | 2.29631793 µH | Preliminary Wheeler estimate |
+| TX inductance | 2.29631793 uH | Preliminary Wheeler estimate |
+| RX inductance | 2.29631793 uH | Preliminary Wheeler estimate |
 | Coupling coefficient | 0.14268615 | Preliminary calculated estimate at 30 mm coaxial spacing |
-| TX/RX series capacitors | 12.27 µF each | Calculated ideal resonance at 30 kHz |
-| Receiver AC load | 12 Ω | Illustrative comparison value from the cited paper, not a project requirement |
+| TX/RX series capacitors | 12.27 uF each | Calculated ideal resonance at 30 kHz |
+| Receiver AC load | 12 ohm | Illustrative comparison value from the cited paper, not a project requirement |
 
-The ideal resonance capacitor is calculated from (C=1/( (2\pi f)^2 L )). The actual capacitor values must be revisited after measuring the built coils and accounting for capacitor tolerance, ESR, parasitics, water/encapsulation effects, and operating conditions.
+The ideal resonance capacitor is calculated from `C = 1 / ((2 pi f)^2 L)`. Actual capacitor values must be revisited after measuring the built coils and accounting for capacitor tolerance, ESR, parasitics, water/encapsulation effects, and operating conditions.
 
-## H-bridge schematic assumptions\n\n- Q1/Q4 and Q2/Q3 are alternating diagonal switch pairs.\n- Idealized gate-to-source pulses use 10 V amplitude and 1 us dead time at 30 kHz.\n- The generic `SWNMOS` model is a simulation placeholder, not a selected MOSFET or a validated loss model.\n- The 12 ohm resistor is a test load, not the final resonant transmitter load.\n- The ideal gate sources do not represent a real high-side/low-side gate-driver IC, bootstrap supply, undervoltage lockout, or protection circuit.\n- Check the generated netlist and run the schematic in LTspice before relying on any waveform.\n\n## Next schematic stages
+## Validation status
 
-1. Replace the ideal bridge source with a pin-accurate MOSFET H-bridge and gate-driver implementation.
-2. Add the receiver rectifier and output filter using selected real components.
-3. Add measured coil models, winding resistance, capacitor ESR, and parasitics.
-4. Validate transient stress, resonant current, power transfer, and thermal margins before hardware.
+The files have been added to the repository and their LTspice text structure and intended pin/wire coordinates have been reviewed. **They have not yet been opened or simulated in an LTspice installation.** Run them in LTspice and inspect the generated netlist and waveforms before relying on results.
+
+These are engineering starting points, not complete or hardware-ready charger designs.
+
+## Next schematic stages
+
+1. Replace ideal gate-drive sources with a selected, datasheet-backed gate-driver and interlock implementation.
+2. Select MOSFETs from datasheet voltage/current, gate-charge, switching-loss, and thermal requirements.
+3. Add the transmitter resonant branch and coupled receiver coil to a graphical schematic.
+4. Add the receiver rectifier and output filter using selected real components.
+5. Add measured coil resistance, capacitor ESR, and parasitics.
+6. Validate transient stress, resonant current, power transfer, and thermal margins before hardware.
