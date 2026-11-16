@@ -1,31 +1,29 @@
 # Underwater Wireless Charging (UWLPT)
 
-Engineering documentation for a 12 V DC, 24 W underwater wireless power transfer prototype.
+Engineering documentation for a 12 V DC, 24 W underwater wireless power-transfer prototype.
 
-## Current design baseline
+## Current analytical coil baseline
 
-The current documented coil model is a **preliminary air-core analytical reference**, not a validated underwater design:
+| Parameter | Value | Status |
+|---|---:|---|
+| TX / RX outer diameter | 70 mm each | Current design dimension |
+| TX / RX clear inner opening | 20 mm each | Current design dimension |
+| Turns per coil | 7 | Current design iteration |
+| Insulated wire diameter | 2.7 mm | H05V-U reference; verify exact purchased cable |
+| Coil plane separation | 30 mm | Reference calculation |
+| TX self-inductance | 2.29631793 µH | Wheeler estimate |
+| RX self-inductance | 2.29631793 µH | Wheeler estimate |
+| Mutual inductance | 0.3276527625 µH | 49-pair Maxwell filament calculation |
+| Coupling coefficient | 0.1426861491 | Derived, dimensionless |
 
-- TX and RX: identical, coaxial, single-layer circular planar spiral coils
-- Outer diameter: 70 mm each
-- Inner opening diameter: 20 mm each
-- Turns: 7 each
-- Conductor: 1.0 mm² solid copper, PVC-insulated H05V-U reference wire
-- Nominal insulated wire diameter: 2.7 mm
-- Derived clear spacing between adjacent insulated turns: 1.0167 mm
-- Reference axial coil-plane separation: 30 mm (study range: 20–40 mm)
-- Wheeler self-inductance estimate: 2.2963 µH per coil
-- Maxwell/Neumann filament-pair mutual-inductance estimate: 0.327653 µH at 30 mm
-- Derived preliminary coupling coefficient: 0.142686
-
-These values are explicitly conditional on the geometry and assumptions documented below. They must not be treated as measured or seawater-validated values.
+**These are preliminary analytical values, not measured results.** The self-inductance uses Wheeler's approximate flat-spiral equation. Mutual inductance uses ideal circular filament turns in free space. Their ratio is therefore a preliminary mixed-model estimate of coupling.
 
 ## Documentation
 
-- [Coil geometry, self-inductance, mutual inductance and coupling calculation](docs/design/coil-design-and-coupling.md)
+- [Readable coil geometry, inductance and coupling calculations](docs/design/coil-design-and-coupling.md)
 - [Research-source index](docs/research/README.md)
-- [Formula provenance and applicability](docs/research/formulas/formula-provenance.md)
-- [Equations and findings transcribed from the underwater WPT paper](docs/research/formulas/chen-2024-paper-equations.md)
+- [Readable formula provenance and derivations](docs/research/formulas/formula-provenance.md)
+- [Equations from the Chen et al. research paper](docs/research/formulas/chen-2024-paper-equations.md)
 - [Research paper technical note](docs/research/papers/chen-2024-tile-shaped-underwater-wpt.md)
 - [Reproducible numerical model](tools/coil_model.py)
 
@@ -33,30 +31,28 @@ These values are explicitly conditional on the geometry and assumptions document
 
 - DC input: 12 V
 - Target transferred power: 24 W
-- Full H-bridge transmitter inverter
-- TX current target: 2 A AC (RMS/measurement point still needs explicit definition)
-- Artificial saltwater target: approximately 35 g/kg salinity
-- Coil separation design range: 20–40 mm; 30 mm is the calculation reference
+- Transmitter: full H-bridge
+- TX current target: 2 A AC; RMS definition and measurement point still need clarification
+- Artificial saltwater target: approximately 35 g/kg; conductivity must be measured at test temperature
+- Coil separation study range: 20–40 mm; 30 mm is the fully documented reference calculation
 
-Operating frequency, compensation topology, actual conductor suitability at frequency, waterproofing/encapsulation, ferrite or shielding, receiver rectifier, and thermal limits are not yet finalized.
+Operating frequency, compensation topology, final conductor, waterproofing, ferrite/shielding, receiver rectifier and thermal limits are not finalized.
 
-## Reproduce the calculation
+## Reproduce the numerical calculation
 
-The numerical model uses SciPy for complete elliptic integrals and numerical quadrature:
+Install SciPy and run:
 
 ```bash
 python -m pip install scipy
 python tools/coil_model.py
 ```
 
-The script prints the turn geometry, Wheeler self-inductance estimate, 7 × 7 Maxwell mutual-inductance matrix, a direct Neumann-integral cross-check, and the derived coupling coefficient. It includes numerical and physical consistency assertions.
+The script prints geometry, Wheeler self-inductance, the 7 × 7 mutual-inductance matrix, a direct Neumann-integral numerical cross-check and the coupling coefficient.
 
 ## Engineering status
 
-**Status: analytical baseline documented; not hardware-validated.**
+**Analytical baseline documented; not hardware-validated.** Do not select resonant capacitors or claim power-transfer efficiency from these inductance estimates alone. Validate the finite-conductor coil geometry using an electromagnetic field solver and then measure the fabricated coils.
 
-Do not choose resonant capacitors or claim transfer efficiency from the present inductance/coupling estimates alone. Next validation work should use a field solver with the real finite conductor, coil alignment, surrounding materials and measured saltwater conductivity, followed by LCR/impedance measurements on the fabricated coils.
+## Source policy
 
-## Source and attribution policy
-
-Research-derived formulas and paper-specific parameters are separated under [docs/research](docs/research/README.md). Research values are not silently substituted for this prototype's design values.
+Research-paper equations and reported values are kept separate from the project's own calculations. Never substitute the paper's coil parameters into this design without recalculation.
