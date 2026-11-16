@@ -1,0 +1,14 @@
+flowchart LR
+    BAT["12 V lead-acid battery"] --> PROT["Fuse + DC link + current limit"]
+    TIMER["NE555 timing oscillator"] --> CTRL["Complementary logic + dead-time interlock"]
+    CTRL --> DRA["Half-bridge driver A"]
+    CTRL --> DRB["Half-bridge driver B"]
+    PROT --> BRIDGE["Four-MOSFET full H-bridge"]
+    DRA --> BRIDGE
+    DRB --> BRIDGE
+    BRIDGE --> CTX["TX resonant capacitor"]
+    CTX --> TX["TX coil"]
+    TX -. "Magnetic coupling through water" .-> RX["RX coil"]
+    RX --> CRX["RX resonant capacitor"]
+    CRX --> RECT["High-frequency bridge rectifier"]
+    RECT --> LOAD["Resistive DC load"]
