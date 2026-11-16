@@ -1,4 +1,4 @@
-# TX and RX Coil Design — Human-Readable Calculation Record
+# TX and RX Coil Design — Calculation Record
 
 **Revision:** 16 November 2026  
 **Status:** Preliminary analytical estimate; not yet validated by physical measurement or a full-field electromagnetic solver.
@@ -350,8 +350,3 @@ Only the 30 mm mutual-inductance case is included as a fully rechecked numerical
 5. Measure saltwater conductivity at the test temperature and include it in the field model.
 6. Evaluate AC resistance, skin effect, proximity effect and temperature rise.
 7. Only after these checks, choose the compensation topology and calculate resonant capacitors.
-
-
-## LTspice resonant-link schematic
-
-The symbol-based LTspice schematic for the idealized series-series compensated link is maintained at [circuits/resonant-link.asc](../../circuits/resonant-link.asc). It contains the TX/RX inductor symbols, compensation capacitors, mutual-coupling directive, receiver load, and a high-value reference resistor for the otherwise floating receiver network. The bridge is represented by an ideal differential pulse source in this first model.
