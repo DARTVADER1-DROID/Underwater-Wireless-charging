@@ -1,0 +1,16 @@
+flowchart TB
+    VCC["+VCC"] --> RA["RA"]
+    RA --> J["RA / RB junction"]
+    J --> RB["RB"]
+    RB --> TC["Timing capacitor node"]
+    TC --> C["C timing capacitor"]
+    C --> GND["Ground"]
+    J --> P7["Pin 7 DISCH"]
+    TC --> P2["Pin 2 TRIG"]
+    TC --> P6["Pin 6 THRES"]
+    P2 --- P6
+    P4["Pin 4 RESET"] --> VCC
+    P8["Pin 8 VCC"] --> VCC
+    P1["Pin 1 GND"] --> GND
+    P3["Pin 3 OUT: timing clock"] --> LOGIC["Bridge timing / interlock logic"]
+    P5["Pin 5 CONT"] -. "Follow datasheet bypass guidance" .-> GND
