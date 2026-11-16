@@ -20,6 +20,11 @@ Engineering documentation for a 12 V DC, 24 W underwater wireless power-transfer
 
 ## Documentation
 
+- [System architecture and engineering documentation index](docs/README.md)
+- [12 V full H-bridge inverter design](docs/power-stage/h-bridge-inverter.md)
+- [NE555 30 kHz oscillator and gate-control interface](docs/control/ne555-oscillator.md)
+- [Text-based engineering diagrams](docs/diagrams/README.md)
+
 - [Readable coil geometry, inductance and coupling calculations](docs/design/coil-design-and-coupling.md)
 - [Research-source index](docs/research/README.md)
 - [Readable formula provenance and derivations](docs/research/formulas/formula-provenance.md)
