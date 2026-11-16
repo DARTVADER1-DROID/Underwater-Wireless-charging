@@ -48,9 +48,3 @@ Use a fuse close to battery positive, current-limited bench supply during develo
 6. Test from a current-limited supply with a dummy load before connecting the coil.
 7. Measure temperature rise and verify protection before sustained operation.
 
-
-## LTspice power-stage schematic
-
-The initial symbol-based LTspice testbench is maintained at [circuits/h-bridge-power-stage.asc](../../circuits/h-bridge-power-stage.asc). It shows the four-switch bridge and uses ideal gate-to-source pulse sources to demonstrate alternating diagonal conduction and 1 us dead time.
-
-This is a topology/switching testbench only. The generic MOSFET model and ideal gate-drive sources must be replaced by selected, datasheet-backed devices and a real gate-driver/control implementation before hardware construction.
