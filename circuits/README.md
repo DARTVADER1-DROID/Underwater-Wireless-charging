@@ -1,23 +1,12 @@
-# LTspice circuits
+# SPICE model files
 
-This directory contains native LTspice-compatible schematics and SPICE testbenches.
+This directory retains the preliminary coupled-resonant-link SPICE netlist for numerical experimentation. It is not a graphical circuit diagram.
 
-## Files
+## File
 
-- [H-bridge power-stage schematic](h-bridge-power-stage.asc) — graphical four-MOSFET bridge using idealized gate-to-source pulse sources.
-- [Coupled resonant-link schematic](resonant-link.asc) — graphical electrical symbols for the ideal bridge source, TX/RX coils, compensation capacitors, load, and mutual coupling.
-- [Coupled resonant-link testbench](uwlpt-resonant-link.cir) — equivalent explicit SPICE netlist for the preliminary series-series compensated wireless link.
+- [Coupled resonant-link testbench](uwlpt-resonant-link.cir) — idealized series-series compensated TX/RX link.
 
-## H-bridge schematic assumptions
-
-- Q1/Q4 and Q2/Q3 are alternating diagonal switch pairs.
-- Idealized gate-to-source pulses use 10 V amplitude at a 30 kHz repetition rate.
-- The pulse timing provides 1 us of non-overlap dead time between diagonal pairs.
-- The generic `SWNMOS` model is a simulation placeholder, not a selected MOSFET or a validated loss model.
-- The 12 ohm resistor is a test load, not the final resonant transmitter load.
-- The ideal gate sources do not represent a real high-side/low-side gate-driver IC, bootstrap supply, undervoltage lockout, gate resistors, or protection circuit.
-
-## Resonant-link model baseline
+## Model baseline
 
 | Item | Value | Status |
 |---|---:|---|
@@ -29,19 +18,10 @@ This directory contains native LTspice-compatible schematics and SPICE testbench
 | TX/RX series capacitors | 12.27 uF each | Calculated ideal resonance at 30 kHz |
 | Receiver AC load | 12 ohm | Illustrative comparison value from the cited paper, not a project requirement |
 
-The ideal resonance capacitor is calculated from `C = 1 / ((2 pi f)^2 L)`. Actual capacitor values must be revisited after measuring the built coils and accounting for capacitor tolerance, ESR, parasitics, water/encapsulation effects, and operating conditions.
+The ideal resonance capacitor is calculated from `C = 1 / ((2 pi f)^2 L)`. Actual values must be revisited after measuring the built coils and accounting for capacitor tolerance, ESR, parasitics, encapsulation and operating conditions.
 
 ## Validation status
 
-The files have been added to the repository and their LTspice text structure and intended pin/wire coordinates have been reviewed. **They have not yet been opened or simulated in an LTspice installation.** Run them in LTspice and inspect the generated netlist and waveforms before relying on results.
+This netlist has not yet been run in an LTspice installation. Inspect the generated netlist and waveforms before relying on simulation results. It is an engineering model, not a complete or hardware-ready charger.
 
-These are engineering starting points, not complete or hardware-ready charger designs.
-
-## Next schematic stages
-
-1. Replace ideal gate-drive sources with a selected, datasheet-backed gate-driver and interlock implementation.
-2. Select MOSFETs from datasheet voltage/current, gate-charge, switching-loss, and thermal requirements.
-3. Replace the ideal bridge source in the resonant-link schematic with the verified H-bridge power stage.
-4. Add the receiver rectifier and output filter using selected real components.
-5. Add measured coil resistance, capacitor ESR, and parasitics.
-6. Validate transient stress, resonant current, power transfer, and thermal margins before hardware.
+Graphical circuit schematics are intentionally not maintained here; functional block diagrams are in [docs/diagrams](../docs/diagrams/README.md).
