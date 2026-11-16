@@ -5,7 +5,7 @@ This directory contains native LTspice-compatible schematics and SPICE testbench
 ## Files
 
 - [H-bridge power-stage schematic](h-bridge-power-stage.asc) — graphical four-MOSFET bridge using idealized gate-to-source pulse sources.
-- [Coupled resonant-link testbench](uwlpt-resonant-link.cir) — explicit SPICE netlist for the preliminary series-series compensated wireless link.
+- [Coupled resonant-link schematic](resonant-link.asc) — graphical electrical symbols for the ideal bridge source, TX/RX coils, compensation capacitors, load, and mutual coupling.\n- [Coupled resonant-link testbench](uwlpt-resonant-link.cir) — equivalent explicit SPICE netlist for the preliminary series-series compensated wireless link.
 
 ## H-bridge schematic assumptions
 
@@ -40,7 +40,7 @@ These are engineering starting points, not complete or hardware-ready charger de
 
 1. Replace ideal gate-drive sources with a selected, datasheet-backed gate-driver and interlock implementation.
 2. Select MOSFETs from datasheet voltage/current, gate-charge, switching-loss, and thermal requirements.
-3. Add the transmitter resonant branch and coupled receiver coil to a graphical schematic.
+3. Replace the ideal bridge source in the resonant-link schematic with the verified H-bridge power stage.
 4. Add the receiver rectifier and output filter using selected real components.
 5. Add measured coil resistance, capacitor ESR, and parasitics.
 6. Validate transient stress, resonant current, power transfer, and thermal margins before hardware.
