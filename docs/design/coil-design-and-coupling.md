@@ -156,7 +156,7 @@ Step 3 — obtain two standard complete elliptic-integral values:
 
 Step 4 — calculate the mutual inductance of this one turn pair:
 
-M-pair = µ0 × square root(r1 × r2) × {[(2 / q) − q] × K(m) − (2 / q) × E(m).
+M-pair = µ0 × square root(r1 × r2) × ([(2 / q) − q] × K(m) − (2 / q) × E(m)).
 
 Here µ0 = 4π × 10⁻⁷ H/m. Use metres for r1, r2 and h. The result is in henries; multiply by 1,000,000 to obtain microhenries.
 
