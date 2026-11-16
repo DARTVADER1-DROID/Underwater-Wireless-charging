@@ -20,7 +20,7 @@ Design and engineering record for a 12 V lead-acid-battery-fed underwater wirele
 | [Wireless link](docs/03-wireless-link/README.md) | TX/RX coil geometry, inductance and coupling |
 | [Receiver](docs/04-receiver/README.md) | Rectifier, output filtering and load |
 | [Research](docs/05-research/README.md) | Research paper, equation notes and source provenance |
-| [Diagrams](docs/diagrams/README.md) | System, inverter, timing and receiver diagrams |
+| [Diagrams](docs/diagrams/README.md) | System, inverter, timing and receiver diagrams |\n| [LTspice circuits](circuits/README.md) | Native SPICE testbenches and circuit-model status |
 
 ## Reproducible coil calculation
 
