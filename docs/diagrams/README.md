@@ -1,12 +1,10 @@
 # Engineering Diagrams
 
-Text-authored diagrams; no image generation required.
+The diagrams below are maintained as Mermaid source inside Markdown files, so GitHub renders them directly.
 
-| Diagram | Use |
-|---|---|
-| [System block diagram](system-block-diagram.mmd) | Overall power and control path |
-| [H-bridge topology](h-bridge-power-stage.mmd) | Four-switch bridge and driver arrangement |
-| [NE555 astable connection](ne555-timing.mmd) | Timer timing network |
-| [Bridge switching sequence](h-bridge-switching-timing.mmd) | Diagonal switching and dead time |
+- [System power path](system-overview.md)
+- [H-bridge power stage](h-bridge.md)
+- [NE555 timing and control](timing-control.md)
+- [Receiver power path](receiver.md)
 
-These are functional diagrams, not production electrical schematics. Final schematics must include exact component symbols, pin numbers, reference designators, net names, footprints, values and ratings, then be checked in an EDA tool.
+These are functional and topology diagrams. They are not production schematics and do not replace pin-accurate CAD drawings, component ratings, PCB layout or simulation.
