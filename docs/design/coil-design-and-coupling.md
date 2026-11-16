@@ -246,13 +246,13 @@ L=\frac{(0.8858267717)^2(7)^2}
 Numerator:
 
 \[
-a^2N^2=38.446\ \text{(approximately)}
+a^2N^2=38.4497643995
 \]
 
 Denominator:
 
 \[
-8a+11c=16.744\ \text{(approximately)}
+8a+11c=16.7440944882
 \]
 
 \[
@@ -406,6 +406,35 @@ Sum of all 49 contributions:
 \]
 
 This reproduces the numerical result from the accompanying Python model.
+
+### 5.6 Independent numerical check using the Neumann line integral
+
+To avoid verifying the elliptic-integral implementation against itself, the same physical mutual inductance was evaluated through a separate numerical route: direct angular integration of the Neumann double-line integral.
+
+For two coaxial circular filaments, rotational symmetry reduces the double integral to:
+
+\[
+M_{ij}=\frac{\mu_0 a_i b_j}{2}
+\int_0^{2\pi}
+\frac{\cos\phi\,d\phi}
+{\sqrt{a_i^2+b_j^2+h^2-2a_i b_j\cos\phi}}
+\]
+
+The integration was evaluated numerically for every one of the 49 turn pairs and then summed.
+
+\[
+M_{\mathrm{Neumann\ quadrature}}=0.327652762514934\ \mu H
+\]
+
+Comparison:
+
+| Method | Total mutual inductance |
+|---|---:|
+| Maxwell complete-elliptic-integral pair formula | 0.327652762514934 µH |
+| Direct Neumann angular quadrature | 0.327652762514934 µH |
+| Difference at displayed precision | less than 1 × 10⁻¹² µH |
+
+This is an independent numerical implementation/check of the same magnetostatic model, not an independent physical measurement. It verifies the elliptic-integral calculation and 49-pair summation, but it does not validate the filament approximation or the Wheeler self-inductance estimate.
 
 ## 6. Coupling coefficient — derive and verify
 
