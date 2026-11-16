@@ -1,65 +1,79 @@
-# Equations reported by Chen et al. (2024) underwater WPT paper
+# Equations from Chen et al. (2024) Underwater WPT Paper
 
-**Source:** Xiaotong Chen, Kun Li, Qing Liu and Zheng Gong, “Design of tile shaped coil structure for wireless power transmission for underwater vehicle,” *Measurement and Control*, Vol. 58, Issue 1, pp. 60–67. First published online 4 May 2024. DOI: https://doi.org/10.1177/00202940241226590
+**Source:** Xiaotong Chen, Kun Li, Qing Liu and Zheng Gong, “Design of tile shaped coil structure for wireless power transmission for underwater vehicle,” *Measurement and Control*, Volume 58, Issue 1, pages 60–67. First published online 4 May 2024. DOI: https://doi.org/10.1177/00202940241226590
 
-SAGE article page: https://journals.sagepub.com/doi/10.1177/00202940241226590
+Publisher page: https://journals.sagepub.com/doi/10.1177/00202940241226590
 
-SAGE identifies this article as CC BY 4.0. This note attributes and summarizes the equations; consult the paper for the original notation, assumptions and full derivation.
+This note summarizes the paper's equations in readable text. Consult the original article for its complete notation, derivations and assumptions.
 
-## 1. Series-series resonance condition — paper equation (1)
+## 1. Series-series resonance condition (paper equation 1)
 
-The paper uses series compensation on both transmitter and receiver sides:
+The paper uses a series compensation capacitor on both transmitter and receiver.
 
-\[
-C_1=\frac{1}{\omega_d^2L_P}
-\qquad
-C_2=\frac{1}{\omega_d^2L_S}
-\]
+For the transmitter:
 
-where \(L_P\) and \(L_S\) are the primary and secondary self-inductances and \(\omega_d\) is the selected resonant angular frequency.
+**C1 = 1 / (ωd² × LP)**
 
-Equivalent frequency form:
+For the receiver:
 
-\[
-\omega_d=2\pi f_d
-\]
+**C2 = 1 / (ωd² × LS)**
 
-\[
-C=\frac{1}{(2\pi f_d)^2L}
-\]
+Definitions:
 
-**Applicability to our design:** not yet applied. Our operating frequency and compensation topology have not been selected, and our air-core inductance estimates need verification in the final coil environment.
+- C1 and C2 = transmitter and receiver compensation capacitance, in farads.
+- LP and LS = primary and secondary coil self-inductance, in henries.
+- ωd = selected resonant angular frequency, in radians per second.
 
-## 2. Equivalent impedances — paper equation (2)
+Angular frequency is related to ordinary frequency by:
 
-The paper writes the primary and secondary resonant impedances as:
+**ωd = 2π × fd**.
 
-\[
-Z_1=R_1+j\omega_dL_P+\frac{1}{j\omega_dC_1}
-\]
+Therefore, the equivalent frequency form is:
 
-\[
-Z_2=R_2+R_0+j\omega_dL_S+\frac{1}{j\omega_dC_2}
-\]
+**C = 1 / [(2π × fd)² × L]**.
 
-The symbols represent the coil resistances, load and series LC branch impedances in the paper's model. This is a circuit-model equation, not a coil-geometry equation.
+**Applicability to our prototype:** not applied yet. Our operating frequency, measured coil inductances and compensation topology are not finalized.
 
-## 3. Coupled-loop circuit equations — paper equation (3)
+## 2. Equivalent circuit impedances (paper equation 2)
 
-The paper uses the mutual-inductance term in the primary/secondary equations:
+The primary-side impedance is written as:
 
-\[
-U_1=Z_1I_1-j\omega_dMI_2
-\]
+**Z1 = R1 + jωdLP + 1 / (jωdC1)**.
 
-\[
-Z_2I_2=j\omega_dMI_1
-\]
+The secondary-side impedance is written as:
 
-The sign of the mutual term depends on the chosen dot convention and reference directions. Use a consistent polarity convention in simulation.
+**Z2 = R2 + R0 + jωdLS + 1 / (jωdC2)**.
 
-## 4. Important source distinction
+Definitions:
 
-The paper's equations are reported here as research-reference equations. They do not establish that our project must use series-series compensation. The compensation network remains undecided.
+- R1 and R2 = primary and secondary coil resistances in the paper's model.
+- R0 = load resistance.
+- j = imaginary unit, square root of −1.
+- ωd = angular operating frequency.
+- LP and LS = coil self-inductances.
+- C1 and C2 = series compensation capacitors.
 
-The paper's reported coil and operating parameters, including its tile-shaped geometry and 30 kHz seawater simulation, are summarized separately in [the paper note](../papers/chen-2024-tile-shaped-underwater-wpt.md).
+These are circuit impedance equations, not coil geometry formulas.
+
+## 3. Coupled-loop circuit equations (paper equation 3)
+
+The paper includes mutual inductance in the primary and secondary circuit equations:
+
+**U1 = Z1 × I1 − jωd × M × I2**
+
+**Z2 × I2 = jωd × M × I1**
+
+Definitions:
+
+- U1 = primary input phasor voltage.
+- I1 and I2 = primary and secondary current phasors.
+- M = mutual inductance.
+- Z1 and Z2 = equivalent impedances defined above.
+
+The sign of the mutual term depends on the winding-dot convention and reference current directions. Keep the polarity convention consistent between schematic, simulation and hardware.
+
+## 4. Research equation versus project design decision
+
+These equations are reported from the paper as research reference. They do not prove that this prototype must use series-series compensation. The topology remains a design decision.
+
+The paper's geometry, conductor, ferrite and performance data are documented separately in [the research-paper note](../papers/chen-2024-tile-shaped-underwater-wpt.md). Do not substitute those values for the present seven-turn circular coil calculations.
