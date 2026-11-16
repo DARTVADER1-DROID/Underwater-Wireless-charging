@@ -5,7 +5,8 @@ This directory contains native LTspice-compatible schematics and SPICE testbench
 ## Files
 
 - [H-bridge power-stage schematic](h-bridge-power-stage.asc) — graphical four-MOSFET bridge using idealized gate-to-source pulse sources.
-- [Coupled resonant-link schematic](resonant-link.asc) — graphical electrical symbols for the ideal bridge source, TX/RX coils, compensation capacitors, load, and mutual coupling.\n- [Coupled resonant-link testbench](uwlpt-resonant-link.cir) — equivalent explicit SPICE netlist for the preliminary series-series compensated wireless link.
+- [Coupled resonant-link schematic](resonant-link.asc) — graphical electrical symbols for the ideal bridge source, TX/RX coils, compensation capacitors, load, and mutual coupling.
+- [Coupled resonant-link testbench](uwlpt-resonant-link.cir) — equivalent explicit SPICE netlist for the preliminary series-series compensated wireless link.
 
 ## H-bridge schematic assumptions
 
