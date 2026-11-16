@@ -1,409 +1,221 @@
-# TX/RX Coil Design — Geometry and Inductance Calculation
+# TX and RX Coil Design — Human-Readable Calculation Record
 
-**Document status:** Preliminary analytical baseline  
-**Calculation date:** 2026-11-16  
-**Scope:** Wire dimensions, circular planar coil geometry, self-inductance, mutual inductance and coupling coefficient.
+**Revision:** 16 November 2026  
+**Status:** Preliminary analytical estimate; not yet validated by physical measurement or a full-field electromagnetic solver.
 
-> **Important:** This document records a reproducible first-pass analytical model. It does not claim that the coils are optimized, that the calculated values are measured, or that the air-core model represents operation in saltwater.
+This document deliberately writes equations in plain text, defines every symbol and shows the numerical substitutions. No calculation should require the reader to interpret raw LaTeX source.
 
-## 1. System requirements and design assumptions
+## 1. Design inputs and assumptions
 
-| Item | Value | Status / interpretation |
+| Item | Value | Status |
 |---|---:|---|
 | DC input | 12 V | User requirement |
 | Target transferred power | 24 W | User requirement |
-| TX inverter | Full H-bridge | Selected architecture |
-| TX current target | 2 A AC | RMS definition and measurement point not yet specified |
-| TX coil outer diameter | 70 mm | Provisional design dimension |
-| RX coil outer diameter | 70 mm | Provisional design dimension |
-| TX/RX inner opening | 20 mm | Assumed for this calculation |
-| TX/RX turns | 7 | Selected for this calculation |
-| Coil separation | 20–40 mm | Design range |
-| Reference coil-plane separation | 30 mm | Calculation case |
-| Medium | Artificial saltwater | Intended test medium |
-| Target salinity | Approximately 35 g/kg | Test target; conductivity must be measured |
-| Wire construction | Solid, single-core copper | Prototype assumption |
-| Wire insulation | PVC | Datasheet reference; not immersion-rated |
+| TX coil outer diameter | 70 mm | Current design dimension |
+| RX coil outer diameter | 70 mm | Current design dimension |
+| Clear inner opening | 20 mm | Current design dimension |
+| Turns per coil | 7 | Current design iteration |
+| Insulated wire diameter | 2.7 mm | H05V-U reference value; verify exact purchased product |
+| Coil plane separation | 30 mm | Reference calculation |
+| Alignment | Coaxial and parallel | Analytical assumption |
+| Medium in this calculation | Free space / air-core | Simplifying assumption |
 
-No operating frequency or compensation topology is selected. The 2 A AC target is not used to calculate geometric inductance.
+The current model excludes finite copper cross-section, lead wires, ferrite, nearby structures, encapsulation, lateral misalignment and conductive saltwater losses. H05V-U building wire is not immersion-rated; waterproofing must be engineered separately.
 
-## 2. Wire reference and manufacturer data
+## 2. Coil geometry
 
-Reference product: **Nuhas Oman H05V-U, 1.0 mm², Class 1 solid copper, PVC insulated**.
+### 2.1 Convert physical boundaries to wire-centreline boundaries
 
-Manufacturer catalogue:  
-https://www.nuhasoman.com/wp-content/uploads/2023/07/Building-Wires-Flexible-Cables-1.pdf
+Wire radius = 2.7 mm / 2 = **1.35 mm**.
 
-The H05V-U table specifies:
+The outermost wire centreline must sit one wire radius inside the physical outer boundary:
 
-| Datasheet item | Manufacturer value |
-|---|---:|
-| Nominal copper cross-section | 1.0 mm² |
-| Conductor class | 1 (solid) |
-| Nominal PVC insulation thickness | 0.6 mm |
-| Nominal overall diameter | 2.7 mm |
-| Maximum operating temperature | 70 °C |
-| H05V-U rated voltage | 300/500 V |
+Outer centreline diameter = 70.0 − 2 × 1.35 = **67.3 mm**.
 
-The catalogue describes the cable application as dry rooms, apparatus, switch/distribution boards and fixed installation. It is **not a direct-immersion underwater cable specification**. A waterproof encapsulation or sealed coil enclosure is required for underwater testing, and compatibility of the insulation/encapsulant must be checked.
+The innermost wire centreline must sit one wire radius outside the clear opening:
 
-### 2.1 Copper diameter from nominal conductor area
-
-The manufacturer gives conductor area, not a bare conductor diameter. For a nominal circular 1.0 mm² copper section:
-
-\[
-A=\frac{\pi d_{\mathrm{Cu}}^2}{4}
-\]
-
-\[
-d_{\mathrm{Cu}}=\sqrt{\frac{4A}{\pi}}
-=\sqrt{\frac{4(1.0)}{\pi}}
-=1.12838\ \mathrm{mm}
-\]
-
-This is the equivalent diameter calculated from the nominal area. It is not a separate manufacturer diameter tolerance.
-
-### 2.2 Which diameter is used for winding geometry?
-
-Use the **2.7 mm nominal overall insulated diameter**, because adjacent insulated wires occupy physical winding space. Do not use the 1.128 mm copper diameter to calculate the winding pitch.
-
-## 3. Geometric derivation
-
-### 3.1 Boundary dimensions
-
-- Coil outer boundary diameter: \(D_o=70\ \mathrm{mm}\)
-- Inner clear opening diameter: \(D_i=20\ \mathrm{mm}\)
-- Insulated wire diameter: \(d_w=2.7\ \mathrm{mm}\)
-- Number of turns: \(N=7\)
-
-Wire radius:
-
-\[
-r_w=\frac{d_w}{2}=\frac{2.7}{2}=1.35\ \mathrm{mm}
-\]
-
-### 3.2 Outermost wire centreline
-
-The outermost wire centreline is one wire radius inside the outside boundary on each side of the diameter:
-
-\[
-D_{o,CL}=D_o-2r_w=70-2(1.35)
-\]
-
-\[
-\boxed{D_{o,CL}=67.3\ \mathrm{mm}}
-\]
-
-### 3.3 Innermost wire centreline
-
-The innermost wire centreline is one wire radius outside the opening boundary on each side:
-
-\[
-D_{i,CL}=D_i+2r_w=20+2(1.35)
-\]
-
-\[
-\boxed{D_{i,CL}=22.7\ \mathrm{mm}}
-\]
-
-### 3.4 Centreline radii and radial span
-
-\[
-R_o=\frac{67.3}{2}=33.65\ \mathrm{mm}
-\]
-
-\[
-R_i=\frac{22.7}{2}=11.35\ \mathrm{mm}
-\]
-
-The radial centreline span is:
-
-\[
-c=R_o-R_i=33.65-11.35
-\]
-
-\[
-\boxed{c=22.3\ \mathrm{mm}}
-\]
-
-### 3.5 Turn pitch and clear spacing
-
-Seven turns create six centreline intervals:
-
-\[
-p=\frac{R_o-R_i}{N-1}
-=\frac{22.3}{6}
-\]
-
-\[
-\boxed{p=3.7166667\ \mathrm{mm}}
-\]
-
-Clear insulation-to-insulation spacing:
-
-\[
-s=p-d_w=3.7166667-2.7
-\]
-
-\[
-\boxed{s=1.0166667\ \mathrm{mm}}
-\]
-
-This replaces the earlier trial value of 0.5 mm. A 0.5 mm clear gap cannot coexist with all the currently specified boundary dimensions and seven equally spaced turns.
-
-### 3.6 Individual turn centreline radii
-
-For turn index \(i=1,\ldots,7\), ordered outermost to innermost:
-
-\[
-R_i=R_o-(i-1)p
-\]
-
-| Turn | Centreline radius (mm) |
-|---:|---:|
-| 1 (outermost) | 33.650000 |
-| 2 | 29.933333 |
-| 3 | 26.216667 |
-| 4 | 22.500000 |
-| 5 | 18.783333 |
-| 6 | 15.066667 |
-| 7 (innermost) | 11.350000 |
-
-These radii define the idealised filament paths used for the mutual-inductance calculation.
-
-### 3.7 Mean radius used by Wheeler
-
-Mean diameter of the innermost and outermost turn centrelines:
-
-\[
-D_{\mathrm{avg}}=\frac{D_{o,CL}+D_{i,CL}}{2}
-=\frac{67.3+22.7}{2}=45.0\ \mathrm{mm}
-\]
-
-Mean radius:
-
-\[
-a=\frac{D_{\mathrm{avg}}}{2}
-=\boxed{22.5\ \mathrm{mm}}
-\]
-
-Radial width for Wheeler's spiral formula:
-
-\[
-c=\boxed{22.3\ \mathrm{mm}}
-\]
-
-The variable \(c\) here means radial winding width, not conductor cross-sectional area.
-
-## 4. Self-inductance estimate — Wheeler single-layer spiral formula
-
-### 4.1 Source and formula
-
-Harold A. Wheeler, “Simple Inductance Formulas for Radio Coils,” *Proceedings of the IRE*, Vol. 16, No. 10, October 1928, pp. 1398–1400.
-
-Original paper copy:  
-https://physlab-wiki.com/_media/phylabs/lab_courses/phys-120_130-wiki-home/winter-experiments/simple_inductance_formulas_for_radio_coils.pdf
-
-Wheeler's equation (3) for a single-layer spiral is:
-
-\[
-\boxed{L(\mu H)=\frac{a^2N^2}{8a+11c}}
-\]
-
-For this equation, \(a\) and \(c\) are in inches. \(a\) is the mean radius and \(c\) is the radial width of the winding. \(N\) is the turn count.
-
-Wheeler states an approximately 5% accuracy condition for \(c>0.2a\), but also warns that accuracy can be worse when there are too few turns, turn spacing is too large, skin effect is significant, or distributed capacitance matters. Therefore, the stated 5% is **not a guaranteed error bound for this seven-turn coil**.
-
-### 4.2 Convert dimensions to inches
-
-\[
-a=\frac{22.5}{25.4}=0.8858267717\ \mathrm{in}
-\]
-
-\[
-c=\frac{22.3}{25.4}=0.8779527559\ \mathrm{in}
-\]
-
-### 4.3 Check Wheeler's stated geometric condition
-
-\[
-0.2a=0.2(22.5)=4.5\ \mathrm{mm}
-\]
-
-\[
-c=22.3\ \mathrm{mm}>4.5\ \mathrm{mm}
-\]
-
-The stated width condition is satisfied. This alone does not guarantee 5% accuracy because Wheeler lists additional limitations, including low turn count and excessive spacing.
-
-### 4.4 Substitute values
-
-\[
-L=\frac{(0.8858267717)^2(7)^2}
-{8(0.8858267717)+11(0.8779527559)}
-\]
-
-Numerator:
-
-\[
-a^2N^2=38.4497643995
-\]
-
-Denominator:
-
-\[
-8a+11c=16.7440944882
-\]
-
-\[
-\boxed{L_{\mathrm{Wheeler}}=2.29631793\ \mu H}
-\]
-
-For identical TX and RX geometry:
-
-\[
-\boxed{L_{TX}=L_{RX}=2.29631793\ \mu H\quad\text{(estimate)}}
-\]
-
-This is an air-core analytical estimate. It is not a measured value.
-
-## 5. Mutual inductance — Maxwell formula for coaxial circular filaments
-
-### 5.1 Source and scope
-
-The mutual-inductance expression for two coaxial circular filaments is Maxwell's elliptic-integral formula, documented by Edward B. Rosa and Louis Cohen in:
-
-- E. B. Rosa and L. Cohen, *The Mutual Inductance of Two Circular Coaxial Coils of Rectangular Section*, Bulletin of the Bureau of Standards, 1906, section “Mutual Inductance of Two Coaxial Circles — Maxwell's Formula in Elliptic Integrals,” p. 360.
-- E. B. Rosa and L. Cohen, *Formulae and Tables for the Calculation of Mutual and Self-Inductance*, Bulletin of the Bureau of Standards, Vol. 5, 1908, formulae section, pp. 6–7.
-
-1906 scan:  
-https://digital.library.unt.edu/ark:/67531/metadc66517/m1/2/
-
-1908 NIST archive:  
-https://nistdigitalarchives.contentdm.oclc.org/digital/api/collection/p16009coll6/id/15319/download
-
-The equation is for two ideal circular filament loops with radii \(a_i\) and \(b_j\), coaxial and separated by axial distance \(h\). For SI units, use radii and distance in metres and \(\mu_0=4\pi\times10^{-7}\ \mathrm{H/m}\).
-
-### 5.2 One turn-pair equation
-
-Define the elliptic-integral modulus:
-
-\[
-q_{ij}=\frac{2\sqrt{a_i b_j}}
-{\sqrt{(a_i+b_j)^2+h^2}}
-\]
-
-Let \(m=q_{ij}^2\). Let \(K(m)\) and \(E(m)\) denote complete elliptic integrals of the first and second kinds, respectively, using parameter \(m\).
-
-Then:
-
-\[
-\boxed{
-M_{ij}=\mu_0\sqrt{a_i b_j}
-\left[
-\left(\frac{2}{q_{ij}}-q_{ij}\right)K(q_{ij}^2)
--\frac{2}{q_{ij}}E(q_{ij}^2)
-\right]
-}
-\]
-
-The result is in henries.
-
-### 5.3 Coil-to-coil sum
-
-Each coil has seven turns. The total mutual inductance is the sum of the 49 turn-pair contributions:
-
-\[
-\boxed{M=\sum_{i=1}^{7}\sum_{j=1}^{7}M_{ij}}
-\]
-
-Assumptions for this calculation:
-
-- TX and RX are coaxial and parallel.
-- Both coils have identical turn radii listed in Section 3.6.
-- Axial separation between coil planes is \(h=30\ \mathrm{mm}=0.030\ \mathrm{m}\).
-- Air/free-space permeability is used.
-- Each turn is approximated as a thin circular filament at the wire centreline.
-
-### 5.4 Worked example: outer TX turn to outer RX turn
-
-\[
-a_1=b_1=33.65\ \mathrm{mm}=0.03365\ \mathrm{m}
-\]
-
-\[
-h=0.030\ \mathrm{m}
-\]
-
-Numerator:
-
-\[
-4a_1b_1=4(0.03365)(0.03365)=0.00452929
-\]
-
-Denominator:
-
-\[
-(a_1+b_1)^2+h^2=(0.0673)^2+(0.030)^2
-\]
-
-\[
-=0.00452929+0.00090000=0.00542929
-\]
+Inner centreline diameter = 20.0 + 2 × 1.35 = **22.7 mm**.
 
 Therefore:
 
-\[
-q_{11}=\sqrt{\frac{0.00452929}{0.00542929}}
-\]
+- Outer centreline radius = 67.3 / 2 = **33.65 mm**.
+- Inner centreline radius = 22.7 / 2 = **11.35 mm**.
+- Radial winding width = 33.65 − 11.35 = **22.30 mm**.
 
-\[
-\boxed{q_{11}=0.9133632731}
-\]
+### 2.2 Derive pitch and clear spacing
 
-\[
-q_{11}^2=0.8342325
-\]
+Seven turns create six equal centreline intervals.
 
-Numerical complete elliptic-integral values:
+Centreline pitch = radial width / (turns − 1)  
+= 22.30 mm / 6  
+= **3.7166667 mm**.
 
-\[
-K(q_{11}^2)\approx2.3429815
-\]
+Clear insulation-to-insulation gap = pitch − insulated wire diameter  
+= 3.7166667 − 2.7  
+= **1.0166667 mm**.
 
-\[
-E(q_{11}^2)\approx1.1547838
-\]
+This gap is derived from the chosen boundaries and turn count. It is not an arbitrary 0.5 mm value.
 
-Substitution into the turn-pair equation gives:
+### 2.3 Turn centreline radii
 
-\[
-M_{11}\approx1.95282019\times10^{-8}\ \mathrm{H}
-\]
+| Turn, outermost to innermost | Radius |
+|---:|---:|
+| 1 | 33.650000 mm |
+| 2 | 29.933333 mm |
+| 3 | 26.216667 mm |
+| 4 | 22.500000 mm |
+| 5 | 18.783333 mm |
+| 6 | 15.066667 mm |
+| 7 | 11.350000 mm |
 
-\[
-\boxed{M_{11}=0.0195282019\ \mu H}
-\]
+Average radius for Wheeler's formula = (33.65 + 11.35) / 2 = **22.50 mm**.
 
-### 5.5 All 49 turn-pair contributions
+Radial winding width for Wheeler's formula = **22.30 mm**.
 
-Rows are TX turns; columns are RX turns. Both are ordered outermost to innermost. Units are microhenries.
+Convert to inches (1 inch = 25.4 mm):
 
-| TX \ RX | 1 | 2 | 3 | 4 | 5 | 6 | 7 |
-|---|---:|---:|---:|---:|---:|---:|---:|
-| 1 | 0.019528202 | 0.016812348 | 0.013839901 | 0.010794945 | 0.007869940 | 0.005240204 | 0.003048939 |
-| 2 | 0.016812348 | 0.014741621 | 0.012356730 | 0.009801204 | 0.007250998 | 0.004886697 | 0.002869834 |
-| 3 | 0.013839901 | 0.012356730 | 0.010555992 | 0.008530434 | 0.006419966 | 0.004390765 | 0.002608977 |
-| 4 | 0.010794945 | 0.009801204 | 0.008530434 | 0.007028891 | 0.005390917 | 0.003750438 | 0.002260259 |
-| 5 | 0.007869940 | 0.007250998 | 0.006419966 | 0.005390917 | 0.004216059 | 0.002988116 | 0.001830170 |
-| 6 | 0.005240204 | 0.004886697 | 0.004390765 | 0.003750438 | 0.002988116 | 0.002157843 | 0.001344482 |
-| 7 | 0.003048939 | 0.002869834 | 0.002608977 | 0.002260259 | 0.001830170 | 0.001344482 | 0.000851630 |
+- Average radius a = 22.50 / 25.4 = **0.8858267717 in**.
+- Radial width c = 22.30 / 25.4 = **0.8779527559 in**.
 
-The matrix is symmetric, \(M_{ij}=M_{ji}\), as expected for reciprocal mutual inductance.
+## 3. Self-inductance of TX and RX coils
 
-Row totals:
+### 3.1 Formula and source
 
-| TX row | Row sum (µH) |
+Harold A. Wheeler, “Simple Inductance Formulas for Radio Coils,” *Proceedings of the IRE*, Vol. 16, No. 10, 1928, equation (3).
+
+For a single-layer flat spiral:
+
+**L (µH) = (N × N × a × a) / (8 × a + 11 × c)**
+
+Definitions and units:
+
+- L = estimated self-inductance in microhenries (µH).
+- N = number of turns.
+- a = average winding radius in inches.
+- c = radial winding width in inches.
+
+The dimensions must be in inches for this version of the equation.
+
+### 3.2 Substitute the actual design values
+
+N = 7  
+a = 0.8858267717 in  
+c = 0.8779527559 in
+
+Numerator:
+
+7 × 7 × 0.8858267717 × 0.8858267717  
+= **38.4497644**.
+
+Denominator:
+
+(8 × 0.8858267717) + (11 × 0.8779527559)  
+= 7.08661417 + 9.65748031  
+= **16.74409449**.
+
+Divide:
+
+L = 38.4497644 / 16.74409449  
+= **2.29631793 µH**.
+
+The TX and RX geometry is identical in this model, so:
+
+- TX self-inductance estimate = **2.29631793 µH**.
+- RX self-inductance estimate = **2.29631793 µH**.
+
+### 3.3 Accuracy warning
+
+This is an empirical approximation, not a finite-wire field solution. Wheeler discusses conditions for approximate accuracy, but the stated 5% condition is not a guaranteed ±5% bound for this seven-turn coil. Low turn count, spacing, leads, frequency-dependent conductor effects and nearby materials can all matter. The displayed digits preserve calculation traceability; they do not imply measurement accuracy.
+
+## 4. Mutual inductance between TX and RX
+
+### 4.1 What is being calculated?
+
+Each TX turn couples magnetically to every RX turn. With seven turns on each side, there are 7 × 7 = **49 turn-pair contributions**.
+
+The coil-to-coil mutual inductance is the sum of those 49 contributions, assuming all turns have the same winding sense and the coils are coaxial.
+
+### 4.2 Formula for one coaxial circular turn pair
+
+This is Maxwell's coaxial circular-filament formula, derived from the Neumann mutual-inductance integral and documented in the Bureau of Standards publications by Rosa and Cohen.
+
+For a TX turn radius r1, RX turn radius r2 and axial separation h:
+
+Step 1 — calculate the elliptic-integral parameter:
+
+m = (4 × r1 × r2) / ((r1 + r2) × (r1 + r2) + h × h).
+
+Step 2 — calculate q:
+
+q = square root of m.
+
+Step 3 — obtain two standard complete elliptic-integral values:
+
+- K(m): complete elliptic integral of the first kind.
+- E(m): complete elliptic integral of the second kind.
+
+Step 4 — calculate the mutual inductance of this one turn pair:
+
+M-pair = µ0 × square root(r1 × r2) × {[(2 / q) − q] × K(m) − (2 / q) × E(m).
+
+Here µ0 = 4π × 10⁻⁷ H/m. Use metres for r1, r2 and h. The result is in henries; multiply by 1,000,000 to obtain microhenries.
+
+**Notation warning:** q is the elliptic modulus and m = q × q is the elliptic parameter. Software functions such as SciPy's ellipk and ellipe expect m, not q. This q is not the coil coupling coefficient.
+
+### 4.3 Fully worked outermost-turn example
+
+For the outermost pair:
+
+- r1 = 33.65 mm = 0.03365 m.
+- r2 = 33.65 mm = 0.03365 m.
+- h = 30 mm = 0.03000 m.
+
+Calculate m:
+
+Numerator = 4 × 0.03365 × 0.03365 = 0.00452929.
+
+Denominator = (0.03365 + 0.03365)² + 0.03000²  
+= 0.06730² + 0.03000²  
+= 0.00452929 + 0.00090000  
+= 0.00542929.
+
+Therefore:
+
+m = 0.00452929 / 0.00542929  
+= **0.8342324687**.
+
+q = square root(0.8342324687)  
+= **0.9133632731**.
+
+Numerically evaluated elliptic integrals:
+
+- K(m) = **2.3429814649**.
+- E(m) = **1.1547837741**.
+
+Substituting these values into the turn-pair equation gives:
+
+M-pair = **1.95282019 × 10⁻⁸ H**  
+= **0.0195282019 µH**.
+
+That is one pair only. It is not the complete coil-to-coil mutual inductance.
+
+### 4.4 Add all 49 turn-pair contributions
+
+The matrix below gives each turn-pair contribution in µH. Rows are TX turns and columns are RX turns; both are ordered outermost to innermost.
+
+| TX turn / RX turn | 1 | 2 | 3 | 4 | 5 | 6 | 7 |
+|---:|---:|---:|---:|---:|---:|---:|---:|
+| 1 | 0.01952820 | 0.01681235 | 0.01383990 | 0.01079494 | 0.00786994 | 0.00524020 | 0.00304894 |
+| 2 | 0.01681235 | 0.01474162 | 0.01235673 | 0.00980120 | 0.00725100 | 0.00488670 | 0.00286983 |
+| 3 | 0.01383990 | 0.01235673 | 0.01055599 | 0.00853043 | 0.00641997 | 0.00439077 | 0.00260898 |
+| 4 | 0.01079494 | 0.00980120 | 0.00853043 | 0.00702889 | 0.00539092 | 0.00375044 | 0.00226026 |
+| 5 | 0.00786994 | 0.00725100 | 0.00641997 | 0.00539092 | 0.00421606 | 0.00298812 | 0.00183017 |
+| 6 | 0.00524020 | 0.00488670 | 0.00439077 | 0.00375044 | 0.00298812 | 0.00215784 | 0.00134448 |
+| 7 | 0.00304894 | 0.00286983 | 0.00260898 | 0.00226026 | 0.00183017 | 0.00134448 | 0.00085163 |
+
+Row sums:
+
+| TX turn | Sum of its seven pair contributions (µH) |
 |---:|---:|
 | 1 | 0.07713448 |
 | 2 | 0.06871943 |
@@ -413,167 +225,128 @@ Row totals:
 | 6 | 0.02475855 |
 | 7 | 0.01481429 |
 
-Sum of all 49 contributions:
+Adding the seven row sums:
 
-\[
-\boxed{M=0.3276527625\ \mu H}
-\]
+M-total = 0.07713448 + 0.06871943 + 0.05870276 + 0.04755709 + 0.03596616 + 0.02475855 + 0.01481429  
+= **0.3276527625 µH**.
 
-This reproduces the numerical result from the accompanying Python model.
+The underlying calculation uses unrounded values; displayed matrix entries and row sums are rounded for readability.
 
-### 5.6 Independent numerical check using the Neumann line integral
+### 4.5 Independent numerical cross-check
 
-To avoid verifying the elliptic-integral implementation against itself, the same physical mutual inductance was evaluated through a separate numerical route: direct angular integration of the Neumann double-line integral.
+The same mutual inductance was evaluated a second way, by numerically integrating the Neumann line-integral expression after exploiting rotational symmetry for coaxial circular loops. This is a separate numerical implementation, not a physical measurement.
 
-For two coaxial circular filaments, rotational symmetry reduces the double integral to:
+Results:
 
-\[
-M_{ij}=\frac{\mu_0 a_i b_j}{2}
-\int_0^{2\pi}
-\frac{\cos\phi\,d\phi}
-{\sqrt{a_i^2+b_j^2+h^2-2a_i b_j\cos\phi}}
-\]
+- Maxwell elliptic-integral pair summation: **0.327652762514934 µH**.
+- Direct Neumann angular quadrature: **0.327652762514934 µH**.
+- Difference at displayed precision: less than **1 × 10⁻¹² µH**.
 
-The integration was evaluated numerically for every one of the 49 turn pairs and then summed.
+The agreement checks the elliptic-integral implementation and the 49-pair sum. It does not validate the ideal-filament approximation or the Wheeler self-inductance estimate.
 
-\[
-M_{\mathrm{Neumann\ quadrature}}=0.327652762514934\ \mu H
-\]
+## 5. Coupling coefficient — fresh derivation
 
-Comparison:
+### 5.1 Definition
 
-| Method | Total mutual inductance |
-|---|---:|
-| Maxwell complete-elliptic-integral pair formula | 0.327652762514934 µH |
-| Direct Neumann angular quadrature | 0.327652762514934 µH |
-| Difference at displayed precision | less than 1 × 10⁻¹² µH |
+The coupling coefficient describes the magnetic coupling between two inductors. It has no unit.
 
-This is an independent numerical implementation/check of the same magnetostatic model, not an independent physical measurement. It verifies the elliptic-integral calculation and 49-pair summation, but it does not validate the filament approximation or the Wheeler self-inductance estimate.
+General equation:
 
-## 6. Coupling coefficient — derive and verify
+**k = M / square root(L-TX × L-RX)**
 
-### 6.1 Definition
+Where:
 
-For two coupled inductors:
+- k = coupling coefficient (dimensionless).
+- M = mutual inductance.
+- L-TX = transmitter self-inductance.
+- L-RX = receiver self-inductance.
 
-\[
-\boxed{k=\frac{M}{\sqrt{L_{TX}L_{RX}}}}
-\]
+All three inductances must use the same unit. Here they are all in µH, so the units cancel.
 
-For identical TX and RX self-inductance estimates:
+### 5.2 Simplify for identical coils
 
-\[
-L_{TX}=L_{RX}=2.2963179303\ \mu H
-\]
+The present model uses identical TX and RX coils:
+
+L-TX = L-RX = 2.2963179303 µH.
 
 Therefore:
 
-\[
-\sqrt{L_{TX}L_{RX}}=2.2963179303\ \mu H
-\]
+square root(L-TX × L-RX)  
+= square root(2.2963179303 × 2.2963179303) µH  
+= **2.2963179303 µH**.
 
-Substitute the mutual-inductance result:
+So the general equation reduces to:
 
-\[
-k=\frac{0.3276527625}{2.2963179303}
-\]
+**k = M / L**.
 
-\[
-\boxed{k=0.14268615\approx0.1427}
-\]
+### 5.3 Substitute the verified mutual-inductance sum
 
-### 6.2 Physical consistency checks
+M = 0.327652762514934 µH.
 
-For passive coupled inductors, the magnitude of coupling must satisfy:
+L = 2.296317930279877 µH.
 
-\[
-0\leq |k|\leq1
-\]
+k = 0.327652762514934 / 2.296317930279877  
+= **0.1426861491**.
 
-Our result:
+Rounded appropriately for an analytical estimate:
 
-\[
-0<0.14268615<1
-\]
+**k ≈ 0.1427 (dimensionless).**
 
-The inductance matrix must also be positive semidefinite:
+If expressed as 100 × k, this is 14.2686%. This is not 14.2686% power-transfer efficiency. Coupling coefficient and power-transfer efficiency are different quantities.
 
-\[
-L_{TX}L_{RX}-M^2\geq0
-\]
+### 5.4 Verify by rearranging the equation
 
-Using the values above:
+Rearranged equation:
 
-\[
-(2.2963179303)^2-(0.3276527625)^2
-\approx5.16571970\ \mu H^2>0
-\]
+M-check = k × square root(L-TX × L-RX).
 
-Both mathematical checks pass.
+Substitute:
 
-**Approximation caveat:** self-inductance uses Wheeler's empirical finite-coil approximation, while mutual inductance uses a sum of ideal filament-loop interactions. Thus the calculated \(k\) is a useful first-pass estimate, not a fully self-consistent finite-conductor field solution. A field solver or measurement of the completed pair is required before treating it as final.
+M-check = 0.1426861491 × 2.2963179303 µH  
+= **0.3276527625 µH** (rounding only).
 
-## 7. Reference-gap sensitivity
+This reproduces the mutual inductance used in the calculation.
 
-The same model can be evaluated at the ends of the requested gap range. These are ideal aligned air-core estimates, not seawater results.
+### 5.5 Physical consistency checks
 
-| Coil-plane separation | Mutual inductance (µH) | Coupling coefficient (using the same Wheeler self-L) |
-|---:|---:|---:|
-| 20 mm | 0.5652 | 0.2462 |
-| 30 mm | 0.3276528 | 0.142686 |
-| 40 mm | 0.2012 | 0.0876 |
+For passive coupled inductors, the magnitude must satisfy:
 
-The 30 mm case is the current reference calculation.
+**0 ≤ |k| ≤ 1**.
 
-## 8. Current calculation summary
+Our result is 0.1426861491, which is within the physical bound.
 
-| Quantity | Current result | Status |
+A second equivalent inductance-matrix check is:
+
+L-TX × L-RX − M² must be greater than or equal to zero.
+
+Using the current values:
+
+(2.2963179303 × 2.2963179303) − (0.3276527625 × 0.3276527625)  
+= approximately **5.16571970 µH²**, which is positive.
+
+Both checks pass. These checks establish mathematical consistency, not experimental accuracy.
+
+### 5.6 Important model limitation
+
+The self-inductance uses Wheeler's empirical flat-spiral approximation. Mutual inductance uses ideal circular-filament turn pairs. Since the two values come from different approximations, their ratio is only a preliminary coupling estimate. A final value should come from one consistent finite-conductor field model or from measurements of the completed coils.
+
+## 6. Verified result summary
+
+| Quantity | Value | Status |
 |---|---:|---|
-| Wire nominal copper area | 1.0 mm² | Datasheet |
-| Wire nominal insulated diameter | 2.7 mm | Datasheet |
-| TX/RX outer diameter | 70 mm | Provisional design assumption |
-| TX/RX inner opening | 20 mm | Assumption used for calculation |
-| TX/RX turns | 7 | Selected calculation baseline |
-| Derived clear turn spacing | 1.0166667 mm | Geometry |
-| TX/RX Wheeler self-inductance | 2.29631793 µH | Approximation |
-| Reference axial separation | 30 mm | Provisional |
-| Mutual inductance | 0.32765276 µH | Maxwell filament-pair sum |
-| Coupling coefficient | 0.14268615 | Derived estimate |
+| TX self-inductance | 2.29631793 µH | Wheeler estimate |
+| RX self-inductance | 2.29631793 µH | Wheeler estimate |
+| Mutual inductance at 30 mm | 0.3276527625 µH | 49-pair Maxwell sum; independently quadrature-checked |
+| Coupling coefficient | 0.1426861491 | Derived from the above estimates; dimensionless |
 
-## 9. What is not yet calculated or validated
+Only the 30 mm mutual-inductance case is included as a fully rechecked numerical result in this revision. Other gap values should not be treated as verified until recalculated with the same audited model.
 
-- Actual self-inductance and AC resistance at the chosen operating frequency.
-- Seawater-induced eddy-current loss and change in complex coil impedance.
-- Measured mutual inductance and coupling under water.
-- Lateral and angular misalignment sensitivity.
-- Ferrite backing/shielding influence.
-- Coil temperature rise and conductor suitability at the eventual frequency/current.
-- Resonant capacitors, because frequency and compensation topology are not yet selected.
-- Delivered DC power and overall efficiency.
+## 7. What remains to be validated
 
-The reference research paper reports a seawater conductivity of 4 S/m in its medium comparison. Our artificial saltwater conductivity must be measured at the actual test temperature; 35 g/kg salinity alone is not enough to define the electromagnetic model.
-
-## 10. Verification procedure for fabricated coils
-
-1. Measure each coil's self-inductance with an LCR meter at a recorded test frequency and test level.
-2. Measure the coils separately in air, then in the intended sealed/immersed arrangement.
-3. Measure series-aiding and series-opposing inductance with the coils in the intended alignment:
-   \[
-   M=\frac{L_{\mathrm{aiding}}-L_{\mathrm{opposing}}}{4}
-   \]
-4. Calculate:
-   \[
-   k=\frac{M}{\sqrt{L_{TX}L_{RX}}}
-   \]
-5. Record the coil-plane gap, lateral offset, angular alignment, water conductivity and temperature for every test.
-6. Compare measured values with the analytical estimate and update the model.
-
-Do not treat an LCR meter result as frequency-independent; record the measurement frequency and equivalent-series model.
-
-## 11. Sources
-
-1. Nuhas Oman, *PVC & LSOH Building Wires / Flexible Cables*, H05V-U table, page 2: https://www.nuhasoman.com/wp-content/uploads/2023/07/Building-Wires-Flexible-Cables-1.pdf
-2. H. A. Wheeler, “Simple Inductance Formulas for Radio Coils,” *Proceedings of the IRE*, Vol. 16, No. 10, October 1928, pp. 1398–1400: https://physlab-wiki.com/_media/phylabs/lab_courses/phys-120_130-wiki-home/winter-experiments/simple_inductance_formulas_for_radio_coils.pdf
-3. E. B. Rosa and L. Cohen, “The Mutual Inductance of Two Circular Coaxial Coils of Rectangular Section,” *Bulletin of the Bureau of Standards*, 1906, p. 360: https://digital.library.unt.edu/ark:/67531/metadc66517/m1/2/
-4. E. B. Rosa and L. Cohen, *Formulae and Tables for the Calculation of Mutual and Self-Inductance*, *Bulletin of the Bureau of Standards*, Vol. 5, 1908, formulae for coaxial circles, pp. 6–7: https://nistdigitalarchives.contentdm.oclc.org/digital/api/collection/p16009coll6/id/15319/download
-5. X. Chen, K. Li, Q. Liu and Z. Gong, “Design of tile shaped coil structure for wireless power transmission for underwater vehicle,” *Measurement and Control*, Vol. 58, Issue 1, pp. 60–67, first published online 4 May 2024, DOI: https://doi.org/10.1177/00202940241226590
+1. Measure each coil's self-inductance with a stated test frequency and fixture.
+2. Measure mutual inductance with a series-aiding / series-opposing test or a validated impedance method.
+3. Calculate k from measured L-TX, L-RX and M at the same frequency.
+4. Repeat with the actual enclosure and surrounding materials.
+5. Measure saltwater conductivity at the test temperature and include it in the field model.
+6. Evaluate AC resistance, skin effect, proximity effect and temperature rise.
+7. Only after these checks, choose the compensation topology and calculate resonant capacitors.
