@@ -1,104 +1,124 @@
-# Formula provenance and applicability
+# Formula Provenance — Human-Readable Reference
 
-This note identifies the source and correct use of the equations in the current TX/RX coil calculation.
+This file explains where each formula comes from, what its symbols mean and how it is used. Equations are written in plain text with words and units so that readers do not need to interpret raw LaTeX.
 
-## 1. Wheeler single-layer spiral self-inductance
+## 1. Wheeler flat-spiral self-inductance approximation
 
-**Primary source:** H. A. Wheeler, “Simple Inductance Formulas for Radio Coils,” *Proceedings of the IRE*, Vol. 16, No. 10, October 1928, equation (3), pp. 1399–1400.
+**Source:** Harold A. Wheeler, “Simple Inductance Formulas for Radio Coils,” *Proceedings of the IRE*, Volume 16, Number 10, October 1928, equation (3).
 
-Source scan:  
-https://physlab-wiki.com/_media/phylabs/lab_courses/phys-120_130-wiki-home/winter-experiments/simple_inductance_formulas_for_radio_coils.pdf
+For a single-layer flat spiral:
 
-For a single-layer spiral (or a short single-layer helical coil), Wheeler gives:
+**L in microhenries = (N × N × a × a) / (8 × a + 11 × c)**
 
-\[
-L(\mu H)=\frac{a^2N^2}{8a+11c}
-\]
+Definitions:
 
-- \(a\): mean winding radius, inches.
-- \(c\): radial winding width, inches.
-- \(N\): number of turns.
-- \(L\): microhenries.
+- L = self-inductance estimate, in microhenries (µH).
+- N = number of turns.
+- a = average winding radius, in inches.
+- c = radial winding width, in inches.
 
-Wheeler states the formula is correct to within about 5% for \(c>0.2a\). In the same paper, he cautions that accuracy may be worse with too few turns, excessive turn spacing, skin effect or distributed capacitance. Therefore, the 5% statement is not a blanket ±5% guarantee for any coil satisfying only the width inequality.
+The dimensions must be entered in inches for this version of the formula. The equation is an approximation. Wheeler's discussion includes accuracy conditions and cautions about few turns, spacing, skin effect and distributed capacitance. Do not treat the often-quoted 5% condition as a guaranteed tolerance for every coil.
 
-**Project use:** preliminary self-inductance estimate for the 7-turn, 70 mm OD / 20 mm opening spiral. The result is not a measurement and needs field-solver or LCR verification.
+## 2. Neumann mutual-inductance integral
 
-## 2. Neumann integral and Maxwell's coaxial circular-loop equation
+The general Neumann equation can be read as:
 
-The general Neumann integral for two closed current paths is:
+**M = (µ0 / 4π) × the sum over every pair of small conductor elements of [(element 1 direction dot element 2 direction) / distance between the elements].**
 
-\[
-M=\frac{\mu_0}{4\pi}
-\oint_{C_1}\oint_{C_2}
-\frac{d\boldsymbol{\ell}_1\cdot d\boldsymbol{\ell}_2}{R}
-\]
+In mathematical notation, the differential line elements are dℓ1 and dℓ2, and their separation is R. The double integral runs around both closed current paths.
 
-where \(R\) is the distance between differential path elements. This is the general magnetostatic mutual-inductance formulation for filamentary closed circuits in a linear homogeneous medium.
+Definitions:
 
-For two coaxial circular filament loops, evaluating the integral gives Maxwell's complete-elliptic-integral expression. Rosa and Cohen reproduce and discuss it in their Bureau of Standards publications:
+- M = mutual inductance, in henries.
+- µ0 = permeability of free space, 4π × 10⁻⁷ H/m.
+- dℓ1, dℓ2 = infinitesimal directed lengths along the two conductors.
+- R = distance between those two small conductor elements.
 
-- 1906 report, p. 360: https://digital.library.unt.edu/ark:/67531/metadc66517/m1/2/
-- 1908 NBS Bulletin, formulae 1–3, pp. 6–7: https://nistdigitalarchives.contentdm.oclc.org/digital/api/collection/p16009coll6/id/15319/download
+This is the general magnetostatic starting point for mutual inductance between filamentary closed circuits.
 
-In SI units:
+**Primary reference:** Edward B. Rosa and Louis Cohen, *Formulae and Tables for the Calculation of Mutual and Self-Inductance*, U.S. Bureau of Standards Bulletin 5 (1908).
 
-\[
-M_{ij}=\mu_0\sqrt{a_i b_j}
-\left[
-\left(\frac{2}{q_{ij}}-q_{ij}\right)K(q_{ij}^2)
--\frac{2}{q_{ij}}E(q_{ij}^2)
-\right]
-\]
+NIST digital archive: https://nistdigitalarchives.contentdm.oclc.org/digital/api/collection/p16009coll6/id/15319/download
 
-\[
-q_{ij}=\frac{2\sqrt{a_i b_j}}
-{\sqrt{(a_i+b_j)^2+h^2}}
-\]
+## 3. Maxwell equation for two coaxial circular filament loops
 
-- \(a_i,b_j,h\) must be in metres.
-- \(\mu_0=4\pi\times10^{-7}\ \mathrm{H/m}\).
-- \(K(m)\), \(E(m)\) are complete elliptic integrals with parameter \(m=q^2\).
-- The output is henries.
+For two coaxial circular loops with radii r1 and r2 and axial separation h:
 
-For multi-turn coils modelled as separate circular filaments:
+**Step 1 — elliptic parameter**
 
-\[
-M_{\mathrm{coil}}=\sum_i\sum_j M_{ij}
-\]
+m = (4 × r1 × r2) / [(r1 + r2)² + h²].
 
-This pairwise summation assumes thin filament paths, coaxial circular turns and a homogeneous free-space medium in the current calculation. Finite conductor cross-section, ferrite, conductive seawater and nearby structures are not included.
+**Step 2 — elliptic modulus**
 
-## 3. Coupling coefficient
+q = square root(m).
 
-For two coupled inductors:
+**Step 3 — complete elliptic integrals**
 
-\[
-k=\frac{M}{\sqrt{L_1L_2}}
-\]
+- K(m) = complete elliptic integral of the first kind.
+- E(m) = complete elliptic integral of the second kind.
 
-- \(M\): mutual inductance.
-- \(L_1,L_2\): self-inductances.
-- \(k\): dimensionless signed coupling coefficient; for the aligned same-polarity convention, the magnitude is between 0 and 1.
+**Step 4 — mutual inductance of one loop pair**
 
-This equation defines magnetic coupling; it is not a power-transfer efficiency formula. For an ideal passive two-coil inductance matrix:
+M-pair = µ0 × square root(r1 × r2) × {[(2 / q) − q] × K(m) − (2 / q) × E(m)}.
 
-\[
-L_1L_2-M^2\geq0
-\]
+Use metres for r1, r2 and h. Use µ0 = 4π × 10⁻⁷ H/m. The answer is in henries.
 
-or equivalently \(|k|\leq1\).
+**Notation warning:** q is the elliptic modulus; m = q² is the parameter passed to K and E. Numerical libraries such as SciPy use the parameter m. Do not confuse q with the coupling coefficient k.
 
-## 4. Experimental mutual-inductance check
+**Reference:** Rosa and Cohen, U.S. Bureau of Standards publications (1906 and 1908), which document Maxwell's elliptic-integral formula for coaxial circular filaments.
 
-For two coils measured in series:
+- 1906 scan: https://digital.library.unt.edu/ark:/67531/metadc66517/m1/2/
+- 1908 NIST archive: https://nistdigitalarchives.contentdm.oclc.org/digital/api/collection/p16009coll6/id/15319/download
 
-\[
-M=\frac{L_{\mathrm{aiding}}-L_{\mathrm{opposing}}}{4}
-\]
+## 4. Multi-turn mutual inductance
 
-This assumes the aiding and opposing measurements use the same coil connections except for the polarity reversal, and the meter is measuring the same frequency-dependent inductance model. Then calculate \(k=M/\sqrt{L_1L_2}\) using self-inductances measured at the same frequency and configuration.
+For two coils represented by individual circular turns:
 
-## 5. Formula not yet selected for this design
+**Total mutual inductance = add the mutual inductance of every TX-turn / RX-turn pair.**
 
-The resonant capacitor formula \(C=1/(\omega_0^2L)\) applies to a chosen ideal series LC resonant branch. It should not be used to select components until the operating frequency, actual in-environment inductance, and compensation topology are decided. The Chen paper's series-series equations are documented separately in [chen-2024-paper-equations.md](chen-2024-paper-equations.md).
+For two seven-turn coils, calculate 7 × 7 = 49 pair contributions and add all 49 values. The sign of each term depends on winding direction. In the current aligned same-winding-sense model, the contributions add.
+
+## 5. Coupling coefficient
+
+General equation:
+
+**k = M / square root(L1 × L2)**
+
+Definitions:
+
+- k = coupling coefficient; dimensionless.
+- M = mutual inductance.
+- L1 = self-inductance of coil 1.
+- L2 = self-inductance of coil 2.
+
+Use the same unit for all inductances; the units cancel.
+
+For equal coils where L1 = L2 = L:
+
+**k = M / L**.
+
+For passive coupled inductors, the magnitude of k cannot exceed 1. This is a mathematical/physical consistency condition, not proof that a numerical model is accurate.
+
+## 6. Experimental mutual-inductance measurement
+
+If both coils are connected in series, measure the total inductance in series-aiding and series-opposing configurations:
+
+**M = (L-aiding − L-opposing) / 4**.
+
+This relationship assumes the two measurements use the same coils and test frequency, with only the relative polarity changed. Measure each coil's self-inductance under the same frequency and fixture conditions, then calculate:
+
+**k = M / square root(L1 × L2)**.
+
+Record meter model, test frequency, fixture compensation, coil position, temperature and surrounding medium.
+
+## 7. Resonance formula — not yet applied to this design
+
+For an ideal LC resonant branch:
+
+**f0 = 1 / [2π × square root(L × C)]**.
+
+Rearranged for capacitance:
+
+**C = 1 / [(2π × f0)² × L]**.
+
+This formula must not be used to select capacitors until operating frequency, measured in-environment inductance and compensation topology are selected. Research-paper equations are summarized separately in [Chen et al. paper equations](chen-2024-paper-equations.md).
