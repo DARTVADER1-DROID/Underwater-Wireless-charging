@@ -102,7 +102,7 @@ Do not directly transfer the paper's operating frequency, turn count, dimensions
 
 ## 6. Equation note
 
-The paper's series-series resonance and coupled-circuit equations are transcribed in readable form in [Chen paper equations](../formulas/chen-2024-paper-equations.md). The project's Wheeler, Maxwell/Neumann and coupling equations are documented separately in [formula provenance](../formulas/formula-provenance.md).
+The paper's series-series resonance and coupled-circuit equations are transcribed in readable form in [Chen paper equations](../equations/chen-2024-paper-equations.md). The project's Wheeler, Maxwell/Neumann and coupling equations are documented separately in [formula provenance](../formula-provenance.md).
 
 ## 7. Reference
 
