@@ -1,12 +1,13 @@
 # SPICE model files
 
-This directory retains the preliminary coupled-resonant-link SPICE netlist for numerical experimentation. It is not a graphical circuit diagram.
+This directory contains SPICE models and LTspice schematics used for numerical and circuit-level experimentation.
 
-## File
+## Files
 
 - [Coupled resonant-link testbench](uwlpt-resonant-link.cir) — idealized series-series compensated TX/RX link.
+- [LTspice inverter experiment](ltspice/inverter.asc) — original four-N-channel-MOSFET H-bridge schematic, preserved as supplied. See [its notes](ltspice/README.md).
 
-## Model baseline
+## Model baseline: coupled resonant link
 
 | Item | Value | Status |
 |---|---:|---|
@@ -22,6 +23,6 @@ The ideal resonance capacitor is calculated from `C = 1 / ((2 pi f)^2 L)`. Actua
 
 ## Validation status
 
-This netlist has not yet been run in an LTspice installation. Inspect the generated netlist and waveforms before relying on simulation results. It is an engineering model, not a complete or hardware-ready charger.
+The coupled-link netlist has not yet been run in an LTspice installation. The inverter schematic is stored as a source design, not as evidence of a validated simulation. Inspect the schematics and generated waveforms before relying on simulation results. These are engineering models, not a complete or hardware-ready charger.
 
-Graphical circuit schematics are intentionally not maintained here; functional block diagrams are in [docs/diagrams](../docs/diagrams/README.md).
+Functional block diagrams remain in [docs/diagrams](../docs/diagrams/README.md).
